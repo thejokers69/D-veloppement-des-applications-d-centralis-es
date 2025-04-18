@@ -1,0 +1,16 @@
+{
+  "name": "dapps",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Mohamed Lakssir",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run dev"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.23.0"
+  }
+}
