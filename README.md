@@ -1,5 +1,7 @@
 # Système de Vote Décentralisé (Decentralized Voting System)
 
+Developed by **Mohamed Lakssir**
+
 This project is a decentralized voting application built with Solidity smart contracts and a React frontend. It allows users to participate in voting for candidates in a transparent and secure way using blockchain technology.
 
 ## Features
