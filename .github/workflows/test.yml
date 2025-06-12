@@ -1,4 +1,3 @@
-# No changes to the content of the file are needed. The file must be moved to `.github/workflows/test.yml` at the root of the repository.
 name: Test
 
 on: [push, pull_request]
@@ -9,9 +8,10 @@ jobs:
 
     services:
       hardhat:
-        image: ethereum/client-go:stable
+        image: ethereum/client-go:v1.12.0
         ports:
           - 8545:8545
+        command: ["--syncmode", "full"]
 
     steps:
       - name: Checkout repository
@@ -26,11 +26,26 @@ jobs:
         run: npm install
 
       - name: Start Hardhat node
-        run: npx hardhat node &
-        continue-on-error: true
+        run: |
+          npx hardhat node &
+          for i in {1..30}; do
+            if curl -s http://localhost:8545 > /dev/null; then
+              echo "Hardhat node is ready!"
+              break
+            fi
+            echo "Waiting for Hardhat node to start..."
+            sleep 1
+          done
+          if ! curl -s http://localhost:8545 > /dev/null; then
+            echo "Hardhat node failed to start in time." >&2
+            exit 1
+          fi
 
       - name: Deploy contract
         run: npx hardhat run scripts/deploy.js --network localhost
 
       - name: Run tests
         run: npm test
+
+      - name: Debug Ethereum client
+        run: docker logs hardhat-node
