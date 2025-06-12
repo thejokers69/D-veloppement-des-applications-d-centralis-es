@@ -28,7 +28,18 @@ jobs:
       - name: Start Hardhat node
         run: |
           npx hardhat node &
-          sleep 10
+          for i in {1..30}; do
+            if curl -s http://localhost:8545 > /dev/null; then
+              echo "Hardhat node is ready!"
+              break
+            fi
+            echo "Waiting for Hardhat node to start..."
+            sleep 1
+          done
+          if ! curl -s http://localhost:8545 > /dev/null; then
+            echo "Hardhat node failed to start in time." >&2
+            exit 1
+          fi
 
       - name: Deploy contract
         run: npx hardhat run scripts/deploy.js --network localhost
